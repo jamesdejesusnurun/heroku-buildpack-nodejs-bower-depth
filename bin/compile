@@ -57,6 +57,25 @@ head "Building dependencies"
 cd $build_dir
 build_dependencies
 
+# Check and run bower
+(
+  if [ -f $build_dir/bower.json ]; then
+    # Install bower locally
+    npm install bower
+    echo "-----> Found bower.json, running bower install"
+    $build_dir/node_modules/.bin/bower install
+  else
+    echo "-----> No bower.json found"
+  fi
+)
+
+# Deep Bower install.
+(
+  if [ "$BOWER_GLOB" != "" ]; then
+    echo "Found glob: $BOWER_GLOB" | indent
+  fi
+)
+
 ####### Create a Procfile if possible
 
 head "Checking startup method"

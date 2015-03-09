@@ -61,14 +61,17 @@ build_dependencies
 (
   # Use https for authentication.
   if [ "$BB_URL_NEEDLE" != "" ]; then
-    git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE;
+    echo "-----> Tell git to use https instead of ssh."
+    git config url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
   fi
+
+  git config -l | indent
 
   if [ -f $build_dir/bower.json ]; then
     # Install bower locally
     echo "-----> Found bower.json, installing bower then running bower install"
-    npm install bower
-    $build_dir/node_modules/.bin/bower install
+    npm install bower | indent
+    $build_dir/node_modules/.bin/bower install | indent
   else
     echo "-----> No bower.json found"
   fi

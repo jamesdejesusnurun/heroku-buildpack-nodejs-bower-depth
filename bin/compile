@@ -63,20 +63,20 @@ build_dependencies
   if [ "$BB_URL_NEEDLE" != "" ]; then
     echo "-----> Tell git to use https instead of ssh."
     git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
-  fi
 
-  echo "listing git config"
-  git config --list
-  echo "done listing git config"
+    echo "listing git config"
+    git config --list
+    echo "done listing git config"
 
-  if [ -f $build_dir/bower.json ]; then
-    # Install bower locally
-    echo "-----> Found bower.json, installing bower."
-    npm install bower | indent
-    echo "Bower installed. Running bower install." | indent
-    $build_dir/node_modules/.bin/bower install --force-latest | indent
-  else
-    echo "-----> No bower.json found"
+    if [ -f $build_dir/bower.json ]; then
+      # Install bower locally
+      echo "-----> Found bower.json, installing bower."
+      npm install bower | indent
+      echo "Bower installed. Running bower install." | indent
+      $build_dir/node_modules/.bin/bower install --force-latest | indent
+    else
+      echo "-----> No bower.json found"
+    fi
   fi
 )
 

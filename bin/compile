@@ -62,7 +62,7 @@ build_dependencies
   # Use https for authentication.
   if [ "$BB_URL_NEEDLE" != "" ]; then
     echo "-----> Tell git to use https instead of ssh."
-    git config url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
+    git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
   fi
 
   git config -l | indent

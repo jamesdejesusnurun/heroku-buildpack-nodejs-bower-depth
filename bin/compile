@@ -57,24 +57,17 @@ head "Building dependencies"
 cd $build_dir
 build_dependencies
 
-####### Create a Procfile if possible
-
-head "Checking startup method"
-ensure_procfile "$start_method" "$build_dir"
-warn_start "$start_method"
-
-####### Finalize the build
-
-head "Finalizing build"
-write_profile
-write_export
-
 # Check and run bower
 (
+  # Use https for authentication.
+  if [ "$BB_URL_NEEDLE" != "" ]; then
+    git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE;
+  fi
+
   if [ -f $build_dir/bower.json ]; then
     # Install bower locally
+    echo "-----> Found bower.json, installing bower then running bower install"
     npm install bower
-    echo "-----> Found bower.json, running bower install"
     $build_dir/node_modules/.bin/bower install
   else
     echo "-----> No bower.json found"
@@ -87,6 +80,18 @@ write_export
     echo "Found glob: $BOWER_GLOB" | indent
   fi
 )
+
+####### Create a Procfile if possible
+
+head "Checking startup method"
+ensure_procfile "$start_method" "$build_dir"
+warn_start "$start_method"
+
+####### Finalize the build
+
+head "Finalizing build"
+write_profile
+write_export
 
 clean_npm
 clean_cache

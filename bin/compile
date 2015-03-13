@@ -34,6 +34,10 @@ head "Reading application state"
 read_current_state
 show_current_state
 
+if [ "$SSH_KEY" != "" ]; then
+  source $bp_dir/bin/ssh
+fi
+
 if [ "$iojs_engine" == "" ]; then
   warn_node_engine "$node_engine"
 else
@@ -57,25 +61,21 @@ head "Building dependencies"
 cd $build_dir
 build_dependencies
 
-if [ "$SSH_KEY" != "" ]; then
-  source $bp_dir/bin/ssh
-fi
-
 # Check and run bower
 (
   if [ -f $build_dir/bower.json ]; then
     # Install bower locally
-    echo "-----> Found bower.json, installing bower."
+    head "Found bower.json, installing bower."
     npm install bower | indent
     echo "Bower installed. Running bower install." | indent
     $build_dir/node_modules/.bin/bower install --force-latest | indent
   else
-    echo "-----> No bower.json found"
+    head "No bower.json found"
   fi
 
   # Use https for authentication.
   # if [ "$BB_URL_NEEDLE" != "" ]; then
-  #   echo "-----> Tell git to use https instead of ssh."
+  #   head "Tell git to use https instead of ssh."
   #   git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
 
   #   echo "listing git config"
@@ -88,7 +88,7 @@ fi
 # Deep Bower install.
 (
   if [ "$BOWER_GLOB" != "" ]; then
-    echo "Found glob: $BOWER_GLOB" | indent
+    head "Found glob: $BOWER_GLOB"
   fi
 )
 

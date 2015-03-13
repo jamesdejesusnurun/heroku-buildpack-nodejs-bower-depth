@@ -57,27 +57,45 @@ head "Building dependencies"
 cd $build_dir
 build_dependencies
 
+if [ "$SSH_KEY" != "" ]; then
+  echo "-----> Found private ssh key config variable, creating id_rsa"
+  mkdir -p ~/.ssh/
+  chmod 700 ~/.ssh/
+
+  echo "$SSH_KEY" > ~/.ssh/id_rsa
+  chmod 400 ~/.ssh/id_rsa
+
+  echo "StrictHostKeyChecking=no" > ~/.ssh/config
+  chmod 600 ~/.ssh/config
+
+  mkdir -p "$1/.profile.d"
+  cat > "$1/.profile.d/00-clobber-ssh-key.sh" << EOF
+  echo "Unsetting ssh deploy key" | indent
+  unset -v SSH_KEY
+fi
+
 # Check and run bower
 (
-  # Use https for authentication.
-  if [ "$BB_URL_NEEDLE" != "" ]; then
-    echo "-----> Tell git to use https instead of ssh."
-    git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
-
-    echo "listing git config"
-    git config --list
-    echo "done listing git config"
-
-    if [ -f $build_dir/bower.json ]; then
-      # Install bower locally
-      echo "-----> Found bower.json, installing bower."
-      npm install bower | indent
-      echo "Bower installed. Running bower install." | indent
-      $build_dir/node_modules/.bin/bower install --force-latest | indent
-    else
-      echo "-----> No bower.json found"
-    fi
+  if [ -f $build_dir/bower.json ]; then
+    # Install bower locally
+    echo "-----> Found bower.json, installing bower."
+    npm install bower | indent
+    echo "Bower installed. Running bower install." | indent
+    $build_dir/node_modules/.bin/bower install --force-latest | indent
+  else
+    echo "-----> No bower.json found"
   fi
+  
+  # Use https for authentication.
+  # if [ "$BB_URL_NEEDLE" != "" ]; then
+  #   echo "-----> Tell git to use https instead of ssh."
+  #   git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
+
+  #   echo "listing git config"
+  #   git config --list
+  #   echo "done listing git config"
+
+  # fi
 )
 
 # Deep Bower install.

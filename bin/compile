@@ -72,6 +72,7 @@ if [ "$SSH_KEY" != "" ]; then
   cat > "$1/.profile.d/00-clobber-ssh-key.sh" << EOF
   echo "Unsetting ssh deploy key" | indent
   unset -v SSH_KEY
+  EOF
 fi
 
 # Check and run bower
@@ -85,7 +86,7 @@ fi
   else
     echo "-----> No bower.json found"
   fi
-  
+
   # Use https for authentication.
   # if [ "$BB_URL_NEEDLE" != "" ]; then
   #   echo "-----> Tell git to use https instead of ssh."

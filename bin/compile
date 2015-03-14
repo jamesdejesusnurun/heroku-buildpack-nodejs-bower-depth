@@ -72,23 +72,16 @@ build_dependencies
   else
     head "No bower.json found"
   fi
-
-  # Use https for authentication.
-  # if [ "$BB_URL_NEEDLE" != "" ]; then
-  #   head "Tell git to use https instead of ssh."
-  #   git config -f .gitconfig url."https://$BBUSER:$BBPASS@bitbucket.org/$BB_URL_NEEDLE".insteadof git@bitbucket.org:$GIT_URL_NEEDLE | indent
-
-  #   echo "listing git config"
-  #   git config --list
-  #   echo "done listing git config"
-
-  # fi
 )
 
 # Deep Bower install.
 (
   if [ "$BOWER_GLOB" != "" ]; then
-    head "Found glob: $BOWER_GLOB"
+    head "Installing bower components for bower components which match '$BOWER_GLOB'"
+
+    for file in $( ls bower_components/$BOWER_GLOB/bower.json ); do
+      (cd `dirname $file` && bower install)
+    done
   fi
 )
 

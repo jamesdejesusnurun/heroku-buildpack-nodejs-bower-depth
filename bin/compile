@@ -67,7 +67,7 @@ build_dependencies
     # Install bower locally
     head "Found bower.json, installing bower."
     npm install bower | indent
-    echo "Bower installed. Running bower install." | indent
+    info "Bower installed. Running bower install."
     $build_dir/node_modules/.bin/bower install --force-latest | indent
   else
     head "No bower.json found"
@@ -80,7 +80,7 @@ build_dependencies
     head "Installing bower components for bower components which match '$BOWER_GLOB'"
 
     for file in $( ls bower_components/$BOWER_GLOB/bower.json ); do
-      (cd `dirname $file` && bower install)
+      (cd `dirname $file` && $build_dir/node_modules/.bin/bower install)
     done
   fi
 )

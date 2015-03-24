@@ -67,23 +67,23 @@ build_dependencies
     # Install bower locally
     head "Found bower.json, installing bower."
     npm install bower | indent
+    $bower_dir=$build_dir/node_modules/.bin
     info "Bower installed. Running bower install."
-    $build_dir/node_modules/.bin/bower install --force-latest | indent
+    $bower_dir/bower install --force-latest | indent && $bower_dir/bower update --force-latest | indent
+
+    # Deep Bower install.
+    if [ "$BOWER_GLOB" != "" ]; then
+      head "Installing bower components for bower components which match '$BOWER_GLOB'"
+
+      for file in $( ls bower_components/$BOWER_GLOB/bower.json ); do
+        (cd `dirname $file` && $bower_dir/bower install | indent)
+      done
+    fi
   else
     head "No bower.json found"
   fi
 )
 
-# Deep Bower install.
-(
-  if [ "$BOWER_GLOB" != "" ]; then
-    head "Installing bower components for bower components which match '$BOWER_GLOB'"
-
-    for file in $( ls bower_components/$BOWER_GLOB/bower.json ); do
-      (cd `dirname $file` && $build_dir/node_modules/.bin/bower install | indent)
-    done
-  fi
-)
 
 ####### Create a Procfile if possible
 

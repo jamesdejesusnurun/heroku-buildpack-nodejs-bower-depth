@@ -80,7 +80,7 @@ build_dependencies
     head "Installing bower components for bower components which match '$BOWER_GLOB'"
 
     for file in $( ls bower_components/$BOWER_GLOB/bower.json ); do
-      (cd `dirname $file` && $build_dir/node_modules/.bin/bower install)
+      (cd `dirname $file` && $build_dir/node_modules/.bin/bower install | indent)
     done
   fi
 )

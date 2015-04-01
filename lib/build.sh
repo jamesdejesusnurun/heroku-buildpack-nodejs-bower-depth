@@ -228,6 +228,7 @@ write_profile() {
   mkdir -p $build_dir/.profile.d
   echo "export PATH=\"\$HOME/.heroku/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\"" > $build_dir/.profile.d/nodejs.sh
   echo "export NODE_HOME=\"\$HOME/.heroku/node\"" >> $build_dir/.profile.d/nodejs.sh
+  echo "export PATH=\"\$HOME/.gem/ruby/1.9.1/bin:\$PATH\"" > $build_dir/.profile.d/ruby.sh
   cat $bp_dir/lib/concurrency.sh >> $build_dir/.profile.d/nodejs.sh
 }
 

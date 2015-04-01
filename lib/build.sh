@@ -106,7 +106,7 @@ show_current_state() {
 
 install_compass() {
   # install compass
-  heroku-buildpack-nodejs "Installing Compass"
+  head "Installing Compass"
   export GEM_HOME=$build_dir/.gem/ruby/1.9.1
   PATH="$GEM_HOME/bin:$PATH"
   if test -d $cache_dir/ruby/.gem; then
